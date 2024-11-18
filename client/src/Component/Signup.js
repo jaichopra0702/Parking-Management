@@ -17,14 +17,31 @@ const Signup = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const { name, email, phone, password, role } = formData;
 
     // Basic validation
     if (name && email && phone && password && role) {
-      setMessage(`Sign up successful as a ${role}!`);
-      setFormData({ name: '', email: '', phone: '', password: '', role: 'user' }); // Reset form
+      try {
+        const response = await fetch('http://localhost:5000/api/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email, phone, password, role }),
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+          setMessage('Sign up successful!');
+          setFormData({ name: '', email: '', phone: '', password: '', role: 'user' }); // Reset form
+        } else {
+          setMessage(result.message); // Show error message
+        }
+      } catch (error) {
+        setMessage('Error signing up. Please try again.');
+      }
     } else {
       setMessage('Please fill in all fields.');
     }
