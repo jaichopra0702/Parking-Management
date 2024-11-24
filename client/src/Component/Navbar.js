@@ -1,37 +1,40 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 import '../Styles/Navbar.css';
-//import { Link } from'react-router-dom';
+
 const Navbar = () => {
+  const isLoggedIn = localStorage.getItem('token');  // Check if user is logged in
+
   return (
     <div>
-      <nav class="nav">
-    <div class="container">
-        <div class="logo">
-            <a href="#">YourLogo</a>
-        </div>
-        <div class="main_list" id="mainListDiv">
+      <nav className="nav">
+        <div className="container">
+          <div className="logo">
+            <Link to="/">YourLogo</Link>
+          </div>
+          <div className="main_list" id="mainListDiv">
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">P-Space</a></li>
-                <li><a href="#">Booking</a></li>
-                <li><a href="#">Wallet</a></li>
-                <li><a href="#">Profile</a></li>
-                <li><a href="#">Contact Us</a></li>
+              <li><Link to="/">Home</Link></li>
+              <li><Link to="/pspace">P-Space</Link></li>
+              <li><Link to="/booking">Booking</Link></li>
+              <li><Link to="/wallet">Wallet</Link></li>
+              
+              {isLoggedIn && <li><Link to="/profile">Profile</Link></li>} {/* Show Profile only if logged in */}
+              
+              <li><Link to="/contact">Contact Us</Link></li>
+
+              {/* Conditionally render Login/Logout link */}
+              {isLoggedIn ? (
+                <li><Link to="/login" onClick={() => { localStorage.removeItem('token'); }}>Logout</Link></li>
+              ) : (
+                <li><Link to="/login">Login</Link></li>
+              )}
             </ul>
+          </div>
         </div>
-        <div class="media_button">
-            <button class="main_media_button" id="mediaButton">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
+      </nav>
     </div>
-</nav>
-    
-<section class="home"></section>
-    </div>
-  )
-}
+  );
+};
 
 export default Navbar;

@@ -1,118 +1,90 @@
 import React, { useState } from 'react';
-import "../Styles/Signup.css";
+import { useNavigate } from 'react-router-dom'; // To redirect after successful signup
+import '../Styles/Signup.css';
 
-const Signup = () => {
-  const [formData, setFormData] = useState({
+const SignUp = () => {
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState({
     name: '',
     email: '',
-    phone: '',
     password: '',
-    role: 'user', // Default role
   });
-
-  const [message, setMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false); // For loading state
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setUserData({ ...userData, [name]: value });
+    setErrorMessage('');  // Clear error message when typing
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, phone, password, role } = formData;
+    setLoading(true); // Start loading
+    try {
+      const response = await fetch('http://localhost:5000/api/route/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
 
-    // Basic validation
-    if (name && email && phone && password && role) {
-      try {
-        const response = await fetch('http://localhost:5000/api/signup', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name, email, phone, password, role }),
-        });
-        const result = await response.json();
+      const result = await response.json();
+      setLoading(false); // Stop loading
 
-        if (response.ok) {
-          setMessage('Sign up successful!');
-          setFormData({ name: '', email: '', phone: '', password: '', role: 'user' }); // Reset form
-        } else {
-          setMessage(result.message); // Show error message
-        }
-      } catch (error) {
-        setMessage('Error signing up. Please try again.');
+      if (response.ok) {
+        navigate('/login'); // Redirect to Login after successful signup
+      } else {
+        setErrorMessage(result.message); // Show error message if any
       }
-    } else {
-      setMessage('Please fill in all fields.');
+    } catch (err) {
+      setLoading(false);
+      setErrorMessage('Something went wrong. Please try again later.');
     }
   };
 
   return (
     <div className="signup-container">
       <h2>Sign Up</h2>
+      {errorMessage && <div className="message error">{errorMessage}</div>}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Name:</label>
+          <label>Name</label>
           <input
             type="text"
-            id="name"
             name="name"
-            value={formData.name}
+            value={userData.name}
             onChange={handleChange}
             required
           />
         </div>
         <div className="form-group">
-          <label htmlFor="email">Email:</label>
+          <label>Email</label>
           <input
             type="email"
-            id="email"
             name="email"
-            value={formData.email}
+            value={userData.email}
             onChange={handleChange}
             required
           />
         </div>
         <div className="form-group">
-          <label htmlFor="phone">Phone Number:</label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
+          <label>Password</label>
           <input
             type="password"
-            id="password"
             name="password"
-            value={formData.password}
+            value={userData.password}
             onChange={handleChange}
             required
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="role">Role:</label>
-          <select
-            id="role"
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            required
-          >
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
-        <button type="submit">Sign Up</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Signing Up...' : 'Sign Up'}
+        </button>
       </form>
-      {message && <div className="message">{message}</div>}
     </div>
   );
 };
 
-export default Signup;
+export default SignUp;
