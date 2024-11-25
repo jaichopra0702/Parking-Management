@@ -24,14 +24,18 @@ exports.submitContactForm = async (req, res) => {
 
     // Create transporter
     const transporter = nodemailer.createTransport({
-      host: 'sandbox.smtp.mailtrap.io',
-      port: 2525,
-      secure: false,
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS
-      }
-    });
+        host: 'sandbox.smtp.mailtrap.io',
+        port: 2525,
+        secure: false, // Mailtrap does not require SSL
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASS
+        },
+        connectionTimeout: 20000, // 20 seconds
+        greetingTimeout: 20000,   // 20 seconds
+        socketTimeout: 20000  
+      });
+      
 
     // IMPORTANT: Set a specific recipient email
     const RECIPIENT_EMAIL = 'recipient@example.com'; // Replace with your email or Mailtrap test inbox
