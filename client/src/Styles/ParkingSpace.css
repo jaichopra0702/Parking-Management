@@ -65,11 +65,11 @@
   }
   
   .twowheeler span {
-    background-color: #8bc34a; /* Light Green for Two-Wheeler */
+    background-color: lightseagreen; /* Light Green for Two-Wheeler */
   }
   
   .threewheeler span {
-    background-color: #ffeb3b; /* Yellow for Three-Wheeler */
+    background-color: blueviolet; /* Yellow for Three-Wheeler */
   }
   
   .fourwheeler span {
