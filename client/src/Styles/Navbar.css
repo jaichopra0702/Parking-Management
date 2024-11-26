@@ -51,6 +51,13 @@
     text-transform: uppercase;
 }
 
+.nav div.logo img{
+    margin-top: 20px;
+    width: 48%;
+    margin-left: -86px;
+    height: auto;
+}
+
 .nav div.main_list {
     width: 600px;
     height: 65px;
