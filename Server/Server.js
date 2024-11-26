@@ -5,7 +5,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const routes = require('./routes/routes');
 const connectDB = require('./config/db');
-
+const {initializeParkingSpaces} = require('./controllers/parkingController');
 const app = express();
 
 // Connect to MongoDB

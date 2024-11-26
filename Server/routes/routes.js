@@ -1,10 +1,11 @@
 const express = require('express');
 const { signUp } = require('../controllers/signup');
 const { login } = require('../controllers/login');
-const authenticate = require('../middleware/authMiddleware'); // Authentication middleware
+const authenticate = require('../middleware/authMiddleware');
 const { getUserProfile, updateEmail, changePassword } = require('../controllers/profileController');
 const { getWalletBalance, updateWalletBalance } = require('../controllers/walletController');
 const contactController = require('../controllers/contactController');
+const { parkVehicle, getParkingSpaces } = require('../controllers/parkingController');
 
 const router = express.Router();
 
@@ -23,5 +24,9 @@ router.put('/wallet', authenticate, updateWalletBalance);
 
 // Contact routes
 router.post('/contact', contactController.submitContactForm);
+
+// Parking routes (Protected routes)
+router.post('/park-vehicle', authenticate, parkVehicle);
+router.get('/parking-spaces', authenticate, getParkingSpaces);
 
 module.exports = router;

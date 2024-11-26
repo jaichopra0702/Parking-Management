@@ -1,4 +1,5 @@
-// middleware/authMiddleware.js
+// authMiddleware.js
+
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Wallet = require('../models/Wallet'); // Add Wallet import
@@ -20,7 +21,7 @@ const authenticate = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
     // Get user from token
-    const user = await User.findById(decoded.userId).select('-password');
+    const user = await User.findById(decoded.userId).select('-password'); // Exclude password for security
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -28,16 +29,16 @@ const authenticate = async (req, res, next) => {
       });
     }
 
-    // Get or create wallet
+    // Get or create wallet for the user
     let wallet = await Wallet.findOne({ userId: user._id });
     if (!wallet) {
       wallet = await Wallet.create({
         userId: user._id,
-        balance: 0
+        balance: 0 // Initialize balance if wallet doesn't exist
       });
     }
 
-    // Add both user and wallet to request
+    // Attach user and wallet to the request object
     req.user = user;
     req.wallet = wallet;
     
@@ -45,6 +46,8 @@ const authenticate = async (req, res, next) => {
     
   } catch (error) {
     console.error('Auth error:', error);
+
+    // Handle specific JWT errors
     if (error.name === 'JsonWebTokenError') {
       return res.status(401).json({
         success: false,
@@ -57,6 +60,8 @@ const authenticate = async (req, res, next) => {
         error: 'Token expired'
       });
     }
+
+    // Handle general errors
     res.status(500).json({
       success: false,
       error: 'Authentication error'

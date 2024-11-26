@@ -80,4 +80,9 @@
     transform: scale(1.1);
     transition: transform 0.2s ease-in-out;
   }
+  .wallet-balance{
+    margin-top: 20px;
+    font-weight: bold;
+  }
+  
   
