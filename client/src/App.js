@@ -8,7 +8,7 @@ import Footer from './Component/Footer';
 import ParkingSpace from './Component/ParkingSpace';
 import Wallet from './Component/Wallet';  // Import the Wallet component
 import Contact from './Component/Contact';  // Import the Contact component
-
+import Bookings from './Component/Bookings';
 function App() {
   return (
     <div className='App'>
@@ -21,6 +21,7 @@ function App() {
         <Route path="/parking-space" element={<ParkingSpace />} />
         <Route path="/wallet" element={<Wallet />} />  {/* Add Wallet route */}
         <Route path='/contact' element={<Contact />} />
+        <Route path='/bookings' element={<Bookings />} />
       </Routes>
       <Footer />
     </div>

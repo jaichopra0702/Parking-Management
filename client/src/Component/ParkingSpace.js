@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import '../Styles/ParkingSpace.css';
 
 const ParkingSpace = () => {
@@ -25,6 +26,7 @@ const ParkingSpace = () => {
     'Car': 100,
     'Truck': 150,
   };
+  const navigate = useNavigate();
 
   // Fetch parking spaces with detailed logging
   const fetchParkingSpaces = async (token) => {
@@ -127,6 +129,14 @@ const ParkingSpace = () => {
     }
 
     try {
+      // Prepare parking details to pass to bookings page
+      const parkingDetails = {
+        selectedSlots: selectedSlots,
+        totalCost: totalCost,
+        parkingPrices: PARKING_PRICES,
+        timestamp: new Date().toISOString()
+      };
+
       // Park each selected vehicle
       for (const type of Object.keys(selectedSlots)) {
         for (const slotIndex of selectedSlots[type]) {
@@ -154,14 +164,12 @@ const ParkingSpace = () => {
       });
       setWallet(walletResponse.data.data);
 
-      // Reset selected slots
-      setSelectedSlots({
-        Bike: [],
-        Car: [],
-        Truck: [],
+      // Navigate to bookings page with parking details
+      navigate('/bookings', { 
+        state: { 
+          parkingDetails: parkingDetails 
+        } 
       });
-
-      alert('Vehicles parked successfully!');
     } catch (err) {
       console.error('Error parking vehicles:', err);
       alert('Failed to park vehicles');
@@ -271,7 +279,6 @@ const ParkingSpace = () => {
         backgroundColor: '#f0f0f0', 
         padding: '10px', 
         borderRadius: '8px',
-        
       }}>
         <h3>Selected Slots:</h3>
         {Object.entries(selectedSlots).map(([type, slots]) => (
