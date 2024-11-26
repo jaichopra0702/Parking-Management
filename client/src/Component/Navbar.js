@@ -15,7 +15,6 @@ const Navbar = () => {
           <div className="main_list" id="mainListDiv">
             <ul>
               <li><Link to="/">Home</Link></li>
-              <li><Link to="/pspace">P-Space</Link></li>
               <li><Link to="/booking">Booking</Link></li>
               <li><Link to="/wallet">Wallet</Link></li>
               
